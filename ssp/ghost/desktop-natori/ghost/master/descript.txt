@@ -1,0 +1,13 @@
+charset,Shift_JIS
+craftman,Narazaka
+craftmanw,奈良阪某
+craftmanurl,https://narazaka.net/
+shiori,SHIOLINK.dll
+
+name,デスクトップ名取
+id,desktop-natori
+
+sakura.name,名取
+kero.name,サーナくん
+
+icon,natori.ico

@@ -1,0 +1,14 @@
+node_modules
+/ssp/*
+!/ssp/ghost
+/ssp/ghost/desktop-natori/updates.txt
+/ssp/ghost/desktop-natori/updates2.dau
+/ssp/ghost/desktop-natori/ghost/master/node.exe
+/ssp/ghost/desktop-natori/ghost/master/LICENSE
+/ssp/ghost/desktop-natori/ghost/master/profile
+/ssp/ghost/desktop-natori/ghost/master/save.json
+/ssp/ghost/desktop-natori/ghost/master/voices
+/ssp/ghost/desktop-natori/ghost/master/voices.json
+/ssp/ghost/desktop-natori/ghost/master/updates.txt
+/ssp/ghost/desktop-natori/ghost/master/updates2.dau
+/ssp/ghost/desktop-natori/shell/master/profile

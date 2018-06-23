@@ -1,0 +1,1 @@
+seriko.use_self_alpha,1

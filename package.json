@@ -1,0 +1,19 @@
+{
+  "name": "desktop-natori",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "node build.js",
+    "prepare": "npm run prepareNpm && npm run prepareNode && npm run prepareSsp && npm run prepareVoices",
+    "prepareNpm": "cd ./ssp/ghost/desktop-natori/ghost/master && npm install",
+    "prepareNode": "node prepareNode.js",
+    "prepareSsp": "node prepareSsp.js",
+    "prepareVoices": "node downloadFromSanaButton.js"
+  },
+  "dependencies": {
+    "cheerio-httpcli": "^0.7.3",
+    "encoding-japanese": "^1.0.29",
+    "fso": "^2.6.3",
+    "jszip": "^3.1.5",
+    "node-fetch": "^2.1.2"
+  }
+}

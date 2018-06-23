@@ -1,0 +1,3 @@
+.git,nonar,noupdate
+.gitignore,nonar,noupdate
+src,nonar,noupdate

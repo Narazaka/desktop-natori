@@ -1,0 +1,19 @@
+version: "{build}"
+branches:
+  except:
+    - gh-pages
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - node --version
+  - npm --version
+  - npm install
+build: off
+before_build:
+  - npm run build
+deploy: off
+environment:
+  matrix:
+    - nodejs_version: 8
+artifacts:
+  - path: desktop-natori-ssp.zip
+    name: desktop-natori-ssp.zip
