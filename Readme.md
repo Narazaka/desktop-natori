@@ -7,6 +7,8 @@
 
 ダメだったら削除します。
 
+ソース: [Github](https://github.com/Narazaka/desktop-natori)
+
 ## ダウンロード
 
 [こ↑こ↓](https://ci.appveyor.com/project/Narazaka/desktop-natori/build/artifacts) からzipを落としてください。
