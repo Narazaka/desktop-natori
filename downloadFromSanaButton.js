@@ -49,20 +49,16 @@ function fetchVoiceCategories($) {
  * @param {VoiceCategory[]} voiceCategories
  */
 async function downloadVoiceCategories(voiceCategories) {
+    const total = voiceCategories.map(vc => vc.voiceFileNames.length).reduce((sum, len) => sum + len, 0);
+    let index = 0;
     for (const voiceCategory of voiceCategories) {
-        await downloadVoiceCategory(voiceCategory);
-    }
-}
-
-/**
- * @param {VoiceCategory} voiceCategory
- */
-async function downloadVoiceCategory(voiceCategory) {
-    for (const voiceFileName of voiceCategory.voiceFileNames) {
-        try{
-            await downloadVoice(voiceCategory.category, voiceFileName);
-        } catch (error) {
-            console.error(error);
+        for (const voiceFileName of voiceCategory.voiceFileNames) {
+            ++index;
+            try{
+                await downloadVoice(voiceCategory.category, voiceFileName, index, total);
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 }
@@ -71,10 +67,10 @@ async function downloadVoiceCategory(voiceCategory) {
  * @param {string} category
  * @param {string} voiceFileName
  */
-async function downloadVoice(category, voiceFileName) {
+async function downloadVoice(category, voiceFileName, index, total) {
     const mp3Url = `${sanaButtonUrl}${voiceFileName}.mp3`;
     const mp3Path = voiceRootPath.join(`${excapeChars(voiceFileName)}.mp3`);
-    process.stderr.write(`${mp3Url} -> ${mp3Path}`);
+    process.stderr.write(`(${index} / ${total}) [${category}] ${mp3Url} -> ${mp3Path}`);
     if (mp3Path.existsSync()) {
         console.warn(" skip.");
         await wait(0.01);
