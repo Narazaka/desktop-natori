@@ -22,6 +22,7 @@ const setup = (events, talk, aitalk) => {
         }
         lines.push(r`---------------------------`);
         lines.push(r`\q[さなボタン本家,OnOpenSanaButton]`);
+        lines.push(r`\q[説明,OnDescription]`);
         lines.push(r`---------------------------`);
         lines.push(r`\q[キャンセル,OnMenuCancel]`);
         lines.push(r`---------------------------`);
@@ -116,6 +117,18 @@ const setup = (events, talk, aitalk) => {
     }
 
     events.OnOpenSanaButton = () => r`\![open,browser,${sanaButtonUrl}]\![raise,OnMenu]\e`;
+    events.OnDescription = () => [
+        r`\_q\f[bold,1]■説明■\f[bold,default]`,
+        r`さなボタンを自動再生して捗りたかった`,
+        r`名取～`,
+        r`---------------------------`,
+        r`機能`,
+        r`\![*]自動でランダムにさなボタン再生する`,
+        r`\![*]ダブルクリックでランダムにさなボタン再生する`,
+        r`\![*]メニューから個別にさなボタン再生する`,
+        r`---------------------------`,
+        r`\q[戻る,OnMenu]`,
+    ].join(r`\n`);
 };
 
 module.exports = { setup };
