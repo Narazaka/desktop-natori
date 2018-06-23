@@ -12,3 +12,4 @@ node_modules
 /ssp/ghost/desktop-natori/ghost/master/updates.txt
 /ssp/ghost/desktop-natori/ghost/master/updates2.dau
 /ssp/ghost/desktop-natori/shell/master/profile
+*.zip
