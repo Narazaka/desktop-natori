@@ -16,3 +16,5 @@ environment:
 artifacts:
   - path: desktop-natori-ssp.zip
     name: desktop-natori-ssp.zip
+cache:
+  - ssp/ghost/desktop-natori/ghost/master/voices
