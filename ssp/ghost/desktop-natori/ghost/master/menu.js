@@ -15,6 +15,7 @@ const setup = (events, talk, aitalk) => {
             r`\f[bold,1]■メニュー■\f[bold,default]`,
             r`\![*]\q[しゃべる間隔 ${aitalk.interval > 0 ? `${aitalk.interval}秒` : "自動でしゃべらない"},OnSettingInterval]`,
             r`\![*]\q[しゃべるカテゴリ,OnSettingExcludeCategories]`,
+            r`\![*]\q[${aitalk.stayOnTop ? "常時手前表示をやめる" : "常に手前に表示する？"},OnToggleStayOnTop]`,
             r`---------------------------`,
         ];
         for (const category of voice.voiceCategories) {
@@ -116,6 +117,11 @@ const setup = (events, talk, aitalk) => {
         return talk.talkNoWait(lines.join(r`\n`));
     }
 
+    events.OnToggleStayOnTop = () => {
+        aitalk.toggleStayOnTop();
+        aitalk.saveSetting();
+        return r`${aitalk.talkStayOnTop()}\![raise,OnMenu]`;
+    }
     events.OnOpenSanaButton = () => r`\![open,browser,${sanaButtonUrl}]\![raise,OnMenu]\e`;
     events.OnDescription = () => [
         r`\_q\f[bold,1]■説明■\f[bold,default]`,

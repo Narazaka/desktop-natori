@@ -17,7 +17,7 @@ events.version = () => "0.1.1";
 events.name = () => "SanaJK";
 events.craftman = () => "Narazaka";
 events.craftmanw = () => "奈良阪";
-events.OnBoot = () => talk.talk(r`\1\s[10]\0\s[0]${voice.byCategory("すこすこのすこ！　おはようございなーす！ くぅ～", "おはようございなーす06")}`);
+events.OnBoot = () => talk.talk(r`\1\s[10]\0\s[0]${aiTalk.talkStayOnTop()}${voice.byCategory("すこすこのすこ！　おはようございなーす！ くぅ～", "おはようございなーす06")}`);
 events.OnClose = () => talk.talkNoWait(r`\1\s[10]\0\s[0]${voice.byCategory("笑い声 あいあい～", "あいあい06")}\_V\-`);
 events.OnBalloonBreak = () => { talk.talking = false; }
 events.OnBalloonClose = () => { talk.talking = false; }

@@ -8,6 +8,7 @@ const saveFile = new FileSystemObject("save.json");
  * @typedef AITalkSetting
  * @prop {number} interval
  * @prop {string[]} excludeCategories
+ * @prop {boolean} stayOnTop
  */
 
  /** @class */
@@ -21,7 +22,7 @@ class AITalk {
      * @param {AITalkSetting} setting
      */
     constructor(setting) {
-        this.setting = setting || { interval: 10, excludeCategories: [] };
+        this.setting = setting || { interval: 10, excludeCategories: [], stayOnTop: true };
         this.count = 0;
     }
 
@@ -34,6 +35,10 @@ class AITalk {
         this.setting.interval = value;
         this.count = -1;
     }
+
+    toggleStayOnTop() { this.stayOnTop = !this.stayOnTop; }
+    get stayOnTop() { return this.setting.stayOnTop; }
+    set stayOnTop(value) { this.setting.stayOnTop = value; }
 
     isExclude(name) {
         return this.setting.excludeCategories.indexOf(name) !== -1;
@@ -74,6 +79,10 @@ class AITalk {
         this.count = 0;
         const choosed = voice.random(this.setting.excludeCategories);
         return r`\_v[${choosed.path}]\b[-1]\_V`;
+    }
+
+    talkStayOnTop() {
+        return r`\![set,windowstate,${this.stayOnTop ? "" : "!"}stayontop]`;
     }
 }
 
