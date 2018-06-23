@@ -7,9 +7,8 @@ install:
   - node --version
   - npm --version
   - npm install
-build: off
-before_build:
   - npm run build
+build: off
 deploy: off
 environment:
   matrix:
