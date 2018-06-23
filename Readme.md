@@ -7,6 +7,8 @@
 
 ダメだったら削除します。
 
+[うごいてるところ](https://twitter.com/narazaka/status/1010410786991140864)
+
 ソース: [Github](https://github.com/Narazaka/desktop-natori)
 
 ## ダウンロード
