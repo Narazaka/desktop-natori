@@ -81,7 +81,7 @@ async function downloadVoice(category, voiceFileName, index, total) {
     await mp3Path.parent().mkdirAll();
     await mp3Path.writeFile(await mp3.buffer());
     console.warn(" done.");
-    await wait(0.5);
+    await wait(0.4);
 }
 
 /**
