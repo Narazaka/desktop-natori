@@ -1,0 +1,11 @@
+charset,Shift_JIS
+
+descript
+{
+version,1
+}
+
+surface0
+{
+collision0,95,170,164,206,bust
+}
