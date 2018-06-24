@@ -30,7 +30,7 @@ function fetchVoiceCategories($) {
     let category = "";
     /** @type {VoiceCategory[]} */
     const voiceCategories = [];
-    $("body").children().each((_, elem) => {
+    $("body font").children().each((_, elem) => {
         const $elem = $(elem);
         if ($elem.is("b")) {
             category = $elem.text();
