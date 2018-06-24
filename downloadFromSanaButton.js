@@ -42,7 +42,7 @@ function fetchVoiceCategories($) {
         }
     });
 
-    return voiceCategories;
+    return voiceCategories.filter(vc => vc.voiceFileNames.length);
 }
 
 /**
