@@ -30,7 +30,8 @@ function fetchVoiceCategories($) {
     let category = "";
     /** @type {VoiceCategory[]} */
     const voiceCategories = [];
-    $("body font").children().each((_, elem) => {
+
+    function fetchSingle(_, elem) {
         const $elem = $(elem);
         if ($elem.is("b")) {
             category = $elem.text();
@@ -40,10 +41,14 @@ function fetchVoiceCategories($) {
             if (!file) return;
             voiceCategories[voiceCategories.length - 1].voiceFileNames.push(file);
         }
-    });
+    }
+
+    $("body").children().each(fetchSingle);
+    $("body font").children().each(fetchSingle);
 
     return voiceCategories.filter(vc => vc.voiceFileNames.length);
 }
+
 
 /**
  * @param {VoiceCategory[]} voiceCategories
