@@ -22,8 +22,7 @@ const setup = (events, talk, aitalk) => {
             lines.push(r`\![*]\q[${category.category},OnMenuTalkCategory,1,${category.category}]`);
         }
         lines.push(r`---------------------------`);
-        lines.push(r`\q[さなボタン本家,OnOpenSanaButton]`);
-        lines.push(r`\q[説明,OnDescription]`);
+        lines.push(r`\![*]\q[さなボタン本家,OnOpenSanaButton] \![*]\q[説明,OnDescription]`);
         lines.push(r`---------------------------`);
         lines.push(r`\q[キャンセル,OnMenuCancel]`);
         lines.push(r`---------------------------`);
