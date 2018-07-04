@@ -34,7 +34,7 @@ function fetchVoiceCategories($) {
     function fetchSingle(_, elem) {
         const $elem = $(elem);
         if ($elem.is("b")) {
-            category = $elem.text();
+            category = `${$elem.text()}`.replace(/^[ 　]+/, "").replace(/[ 　]+$/, "");
             voiceCategories.push({category, voiceFileNames: []});
         } else if ($elem.is("button")) {
             const file = $elem.data("file");
