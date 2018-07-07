@@ -1,3 +1,4 @@
+// @ts-check
 const client = require("cheerio-httpcli");
 const fetch = require("node-fetch").default;
 const FileSystemObject = require("fso").FileSystemObject;
@@ -14,14 +15,25 @@ client.fetch(sanaButtonUrl, (error, $) => {
     if (error) throw error;
     const voiceCategories = fetchVoiceCategories($);
     writeCategories(voiceCategories);
-    downloadVoiceCategories(voiceCategories).then(() => console.warn("all done."));
+    downloadVoiceCategories(voiceCategories)
+        .then(() => deleteUntrackedFiles(voiceCategories))
+        .then(() => console.warn("all done."));
 });
 
 /**
  * @typedef VoiceCategory
  * @prop {string} category
- * @prop {string[]} voiceFileNames
+ * @prop {Voice[]} voices
  */
+
+ /**
+  * @typedef Voice
+  * @prop {string} name
+  * @prop {string} dataName
+  * @prop {string} mp3Url
+  * @prop {FileSystemObject} mp3Path
+  * @prop {string} mp3RelativePath
+  */
 
 /**
  * @param {import("cheerio-httpcli").CheerioStaticEx} $
@@ -35,18 +47,29 @@ function fetchVoiceCategories($) {
         const $elem = $(elem);
         if ($elem.is("b")) {
             category = `${$elem.text()}`.replace(/^[ 　]+/, "").replace(/[ 　]+$/, "");
-            voiceCategories.push({category, voiceFileNames: []});
+            voiceCategories.push({category, voices: []});
         } else if ($elem.is("button")) {
-            const file = $elem.data("file");
-            if (!file) return;
-            voiceCategories[voiceCategories.length - 1].voiceFileNames.push(file);
+            const dataName = $elem.data("file");
+            if (!dataName) return;
+            const name = path.basename(dataName);
+            const mp3Url = `${sanaButtonUrl}${dataName}.mp3`;
+            const escapedFileName = `${excapeChars(dataName)}.mp3`;
+            const mp3Path = voiceRootPath.join(escapedFileName);
+            const mp3RelativePath = voiceRelativePath.join(escapedFileName).path;
+            voiceCategories[voiceCategories.length - 1].voices.push({
+                name,
+                dataName,
+                mp3Url,
+                mp3Path,
+                mp3RelativePath,
+            });
         }
     }
 
     $("body").children().each(fetchSingle);
     $("body font").children().each(fetchSingle);
 
-    return voiceCategories.filter(vc => vc.voiceFileNames.length);
+    return voiceCategories.filter(vc => vc.voices.length);
 }
 
 
@@ -54,13 +77,13 @@ function fetchVoiceCategories($) {
  * @param {VoiceCategory[]} voiceCategories
  */
 async function downloadVoiceCategories(voiceCategories) {
-    const total = voiceCategories.map(vc => vc.voiceFileNames.length).reduce((sum, len) => sum + len, 0);
+    const total = voiceCategories.map(vc => vc.voices.length).reduce((sum, len) => sum + len, 0);
     let index = 0;
     for (const voiceCategory of voiceCategories) {
-        for (const voiceFileName of voiceCategory.voiceFileNames) {
+        for (const voice of voiceCategory.voices) {
             ++index;
             try{
-                await downloadVoice(voiceCategory.category, voiceFileName, index, total);
+                await downloadVoice(voiceCategory.category, voice, index, total);
             } catch (error) {
                 console.error(error);
             }
@@ -70,23 +93,42 @@ async function downloadVoiceCategories(voiceCategories) {
 
 /**
  * @param {string} category
- * @param {string} voiceFileName
+ * @param {Voice} voice
  */
-async function downloadVoice(category, voiceFileName, index, total) {
-    const mp3Url = `${sanaButtonUrl}${voiceFileName}.mp3`;
-    const mp3Path = voiceRootPath.join(`${excapeChars(voiceFileName)}.mp3`);
-    process.stderr.write(`(${index} / ${total}) [${category}] ${mp3Url} -> ${mp3Path}`);
-    if (mp3Path.existsSync()) {
+async function downloadVoice(category, voice, index, total) {
+    process.stderr.write(`(${index} / ${total}) [${category}] ${voice.mp3Url} -> ${voice.mp3Path}`);
+    if (voice.mp3Path.existsSync()) {
         console.warn(" skip.");
         await wait(0.01);
         return;
     }
-    const mp3 = await fetch(encodeURI(mp3Url));
+    const mp3 = await fetch(encodeURI(voice.mp3Url));
     if (!mp3.ok) throw new Error(mp3.statusText);
-    await mp3Path.parent().mkdirAll();
-    await mp3Path.writeFile(await mp3.buffer());
+    await voice.mp3Path.parent().mkdirAll();
+    await voice.mp3Path.writeFile(await mp3.buffer());
     console.warn(" done.");
     await wait(0.4);
+}
+
+/**
+ * @param {VoiceCategory[]} voiceCategories
+ */
+async function deleteUntrackedFiles(voiceCategories) {
+    const children = await voiceRootPath.childrenAll();
+    /** @type {{[name: string]: boolean}} */
+    const allVoiceFileNames = {};
+    for (const voiceCategory of voiceCategories) {
+        for (const voice of voiceCategory.voices) {
+            allVoiceFileNames[path.normalize(voice.mp3Path.path)] = true;
+        }
+    }
+    for (const child of children) {
+        if (child.extname() !== ".mp3") continue;
+        if (!allVoiceFileNames[child.path]) {
+            console.warn(`delete untracked file [${child}]`);
+            await child.unlink();
+        }
+    }
 }
 
 /**
@@ -102,25 +144,11 @@ function writeCategories(voiceCategories) {
 function genCategoriesObj(voiceCategories) {
     return voiceCategories.map((voiceCategory) => ({
         category: voiceCategory.category,
-        voices: voiceCategory.voiceFileNames.map((voiceFileName) => ({
-            name: path.basename(voiceFileName),
-            path: voiceRelativePath.join(`${excapeChars(voiceFileName)}.mp3`).path,
+        voices: voiceCategory.voices.map((voice) => ({
+            name: voice.name,
+            path: voice.mp3RelativePath,
         })),
     }));
-}
-
-/**
- * @param {VoiceCategory[]} voiceCategories
- */
-function genCategories(voiceCategories) {
-    const kisLines = ["=kis"];
-    for (const voiceCategory of voiceCategories) {
-        for (const voiceFileName of voiceCategory.voiceFileNames) {
-            kisLines.push(`setstr "voice.${voiceCategory.category}.${path.basename(voiceFileName)}" "${voiceRelativePath.join(`${voiceFileName}.mp3`)}";`);
-        }
-    }
-    kisLines.push("=end");
-    return kisLines.map(line => `${line}\n`).join("");
 }
 
 /**
