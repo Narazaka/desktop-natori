@@ -127,7 +127,7 @@ function genCategories(voiceCategories) {
  * @param {string} str
  */
 function excapeChars(str) {
-    return str.replace(/♡/g, "__heart__");
+    return str.replace(/♡/g, "__heart__").replace(/\u200b/g, "");
 }
 
 /**
