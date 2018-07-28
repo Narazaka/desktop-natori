@@ -12,7 +12,7 @@ const toRemoves = [
 ];
 
 async function extractSsp() {
-    const res = await fetch("http://sspnormal.shillest.net/archive/ssp_2_4_21f.exe");
+    const res = await fetch("http://sspnormal.shillest.net/archive/ssp_2_4_23f.exe");
     if (!res.ok) throw new Error(res.statusText);
     const zip = await JSZip.loadAsync(await res.buffer());
     const paths = [];
